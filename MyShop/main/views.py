@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .models import Banner,Category,Brand,Product,ProductAttribute
+from django.db.models import Min,Max
 # Create your views here.
 
 # Home (index) view
@@ -25,9 +26,15 @@ def brand_list(request):
     return render(request,'brand.html',{'data':data})
 # Product List View
 def product_list(request):
-    data = Product.objects.all().order_by('-id')
+    total_data = Product.objects.count()
+    data = Product.objects.all().order_by('-id')[:3]
+    min_price = ProductAttribute.objects.aggregate(Min('price'))
+    max_price = ProductAttribute.objects.aggregate(Max('price'))
     return render(request,'product_list.html',{
         'data':data,
+        'total_data':total_data,
+		'min_price':min_price,
+		'max_price':max_price,
         })
 
 
@@ -67,7 +74,11 @@ def filter_data(request):
     categories = request.GET.getlist('category[]')
     brands = request.GET.getlist('brand[]')
     sizes = request.GET.getlist('size[]')
+    maxPrice = request.GET['maxPrice']
+    minPrice = request.GET['minPrice']
     allProducts = Product.objects.all().order_by('-id').distinct()
+    allProducts = allProducts.filter(productattribute__price__gte=minPrice)
+    allProducts = allProducts.filter(productattribute__price__lte=maxPrice)
     if len(colors)>0:
         allProducts = allProducts.filter(productattribute__color__id__in=colors).distinct()
     if len(categories)>0:

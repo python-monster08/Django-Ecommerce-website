@@ -32,19 +32,19 @@ $(document).ready(function(){
 	});
 	// End
 
-	// // Filter Product According to the price
-	// $("#maxPrice").on('blur',function(){
-	// 	var _min=$(this).attr('min');
-	// 	var _max=$(this).attr('max');
-	// 	var _value=$(this).val();
-	// 	console.log(_value,_min,_max);
-	// 	if(_value < parseInt(_min) || _value > parseInt(_max)){
-	// 		alert('Values should be '+_min+'-'+_max);
-	// 		$(this).val(_min);
-	// 		$(this).focus();
-	// 		$("#rangeInput").val(_min);
-	// 		return false;
-	// 	}
-	// });
-	// // End
+	// Filter Product According to the price
+	$("#maxPrice").on('blur',function(){
+		var _min=$(this).attr('min');
+		var _max=$(this).attr('max');
+		var _value=$(this).val();
+		console.log(_value,_min,_max);
+		if(_value < parseInt(_min) || _value > parseInt(_max)){
+			alert('Values should be '+_min+'-'+_max);
+			$(this).val(_min);
+			$(this).focus();
+			$("#rangeInput").val(_min);
+			return false;
+		}
+	});
+	// End
 });
